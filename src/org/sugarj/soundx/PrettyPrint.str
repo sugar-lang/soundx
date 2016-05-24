@@ -46,6 +46,12 @@ imports org/sugarj/soundx/Debug
 
 
 strategies
+  
+  sx-indentation = <repeat(!(<id>," ");conc-strings|<SX-Indentation>)> ""
+  sx-init-indentation = rules(SX-Indentation := -2)
+  sx-increase-indentation = rules(SX-Indentation := <SX-Indentation; int-add(|2)>)
+  sx-decrease-indentation = rules(SX-Indentation := <SX-Indentation; int-subt(|2)>)
+  
 	/**
 	 * Pretty prints a term or a list of terms. For a list, each element is
 	 * printed on a separate line.

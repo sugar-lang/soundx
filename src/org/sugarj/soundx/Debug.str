@@ -36,6 +36,9 @@
  */
 module org/sugarj/soundx/Debug
 
+imports
+  org/sugarj/soundx/PrettyPrint
+
 strategies
 	/**
 	 * Set this to id for debug mode on, fail for off.
@@ -52,3 +55,7 @@ strategies
 	sx-debug(|msg) =
 		where(sx-debug-mode);
 		debug(!<conc-strings> ("DEBUG: ", msg))
+
+  sx-debug-indented(|msg) =
+    where(out := <!(<sx-indentation>, msg); conc-strings>);
+    sx-debug(|out)

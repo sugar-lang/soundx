@@ -62,6 +62,7 @@ strategies
 	 */
 	sx-dfsbc-build-derivation =
 		?(asms, inf-rules, judg);
+		sx-init-indentation;
 		<sx-vars> asms => vars-asms;
 		<sx-dfsbc-build-derivations(|vars-asms)> (asms, inf-rules, [judg]) => (_, [deriv]);
 		!deriv
@@ -78,11 +79,15 @@ strategies
 	sx-dfsbc-build-derivations(|vars-asms) =
 		// try to derive first goal
 		?(asms, inf-rules, goals@[judg|_]);
-		<sx-debug(|"Trying to derive: ")> (<sx-pretty-print-term> judg);
-		sx-report-success(<sx-dfsbc-build-derivations-by-asm(|vars-asms)> (asms, asms, inf-rules, goals) <+
-		 (<sx-is-prim-judgement> judg;
-		  <sx-dfsbc-build-derivations-by-prim(|vars-asms)> (asms, inf-rules, goals)) +
-		  <sx-dfsbc-build-derivations-by-rule(|vars-asms)> (asms, inf-rules, inf-rules, goals))
+		sx-increase-indentation;
+		finally(
+			<sx-debug-indented(|"Trying to derive: ")> (<sx-pretty-print-term> judg);
+			sx-report-success(
+			  <sx-dfsbc-build-derivations-by-asm(|vars-asms)> (asms, asms, inf-rules, goals) <+
+				 (<sx-is-prim-judgement> judg;
+				  <sx-dfsbc-build-derivations-by-prim(|vars-asms)> (asms, inf-rules, goals)) +
+				  <sx-dfsbc-build-derivations-by-rule(|vars-asms)> (asms, inf-rules, inf-rules, goals)),
+		  sx-decrease-indentation)
 
 	/**
 	 * Tries to derive a goal by an assumption. Fails if not possible.
