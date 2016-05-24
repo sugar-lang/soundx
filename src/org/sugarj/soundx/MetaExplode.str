@@ -93,8 +93,7 @@ imports org/sugarj/languages/Stratego
 	          TrmInt 
 	          <+ TrmStr 
 	    <+ TrmConc 
-	    <+ TrmNil 
-	    <+ TrmCons 
+	    <+ TrmList 
 	    <+ TrmOp
 	        >)
 	
@@ -112,8 +111,7 @@ imports org/sugarj/languages/Stratego
 	    <+ ConcCons; pretrm-explode
 	    <+ ConcNil; pretrm-explode
 	    <+ TrmConc
-	    <+ TrmNil 
-	    <+ TrmCons 
+	    <+ TrmList 
 	    <+ TrmOp
 	
 	// match ToTerm nested in ToTerm; take structure literally
@@ -173,18 +171,15 @@ imports org/sugarj/languages/Stratego
 	  TrmAnno : 
 	    WithAnno(t1, t2) -> Anno(t1', t2')
 	    where <trm-explode; try(?NoAnnoList(<id>))> t1 => t1'
-	        ; (<is-list>t2 <+ ![t2])
+	        ; (<is-list> t2 <+ ![t2])
 	        ; foldr(!NoAnnoList(Op("Nil",[]))
 	         ,!NoAnnoList(Op("Cons", [<Fst>, <Snd>]))
 	         , MetaExplode)
 	        ; try(?NoAnnoList(<id>)) => t2'
 	
-	  TrmNil :
-	    [] -> Op("Nil", [])
-	
-	  TrmCons :
-	    [x | xs] -> 
-	    Op("Cons",[<trm-explode>x, <trm-explode> xs])
+	  TrmList =
+	      is-list
+	    ; !List(<map(trm-explode)>)
 	
 	  TrmCons :
 	    ConsAux(x, xs) -> 
