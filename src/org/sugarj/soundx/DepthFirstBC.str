@@ -82,11 +82,10 @@ strategies
 		sx-increase-indentation;
 		finally(
 			<sx-debug-indented(|"Trying to derive: ")> (<sx-pretty-print-term> judg);
-			sx-report-success(
-			  <sx-dfsbc-build-derivations-by-asm(|vars-asms)> (asms, asms, inf-rules, goals) <+
-				 (<sx-is-prim-judgement> judg;
-				  <sx-dfsbc-build-derivations-by-prim(|vars-asms)> (asms, inf-rules, goals)) +
-				  <sx-dfsbc-build-derivations-by-rule(|vars-asms)> (asms, inf-rules, inf-rules, goals)),
+		  <sx-dfsbc-build-derivations-by-asm(|vars-asms)> (asms, asms, inf-rules, goals) <+
+			 (<sx-is-prim-judgement> judg;
+			  <sx-dfsbc-build-derivations-by-prim(|vars-asms)> (asms, inf-rules, goals)) +
+			  <sx-dfsbc-build-derivations-by-rule(|vars-asms)> (asms, inf-rules, inf-rules, goals),
 		  sx-decrease-indentation)
 
 	/**
@@ -225,13 +224,22 @@ strategies
 		  // <sx-debug(|"fresh rule: ")> SXInfRule(premises, name, concl);
 		  <sx-dfsbc-unify(|vars-asms)> (judg, concl) => mgu;
 		  // <sx-debug(|"mgu: ")> mgu;
-		  <sx-sub-apply> (mgu, <conc> (premises, judgs)) => judgs1;
+		  <sx-sub-apply> (mgu, premises) => newpremises;
 		  // <sx-debug(|"new goals: ")> judgs1;
-      <sx-dfsbc-build-derivations(|vars-asms)> (asms, all-inf-rules, judgs1) => (sub, derivs);
-		  <split-at(|<length> premises)> derivs => (derivs-prem, derivs-other);
-		  <sx-sub-compose> (sub, mgu) => sub1;
-		  <sx-sub-apply> (sub1, judg) => judg1;
-		  !(sub1, [SXDerivInst(derivs-prem, name, judg1) | derivs-other])) <+
+		  
+		  <sx-debug-indented(|"using ")> name;
+		  sx-report-success(
+		  	<sx-dfsbc-build-derivations(|vars-asms)> (asms, all-inf-rules, newpremises) => (subPremises, derivs-prem)
+		  	| name
+		  );
+		  <sx-sub-compose> (subPremises, mgu) => sub1;
+      
+		  <sx-sub-apply> (sub1, judgs) => newjudgs;
+      <sx-dfsbc-build-derivations(|vars-asms)> (asms, all-inf-rules, newjudgs) => (subJudgs, derivs-other);
+      <sx-sub-compose> (subJudgs, sub1) => sub2;
+      
+		  <sx-sub-apply> (sub2, judg) => judg1;
+		  !(sub2, [SXDerivInst(derivs-prem, name, judg1) | derivs-other])) <+
 		 <sx-dfsbc-build-derivations-by-rule(|vars-asms)> (asms, all-inf-rules, inf-rules, goals))
 
 	/**

@@ -48,10 +48,10 @@ strategies
 	 */
 	sx-print-error = debug(!"")
 	
-	sx-report-success(s) = 
+	sx-report-success(s|what) = 
 	  s 
-	  < where(<sx-debug-indented(|"")> "success") 
-	  + (where(<sx-debug-indented(|"")> "failed"); fail) 
+	  < where(<sx-debug-indented(|"success ")> what) 
+	  + (where(<sx-debug-indented(|"failed ")> what); fail) 
 
 	/**
  	 * Checks if the current toplevel declaration is the last one.
