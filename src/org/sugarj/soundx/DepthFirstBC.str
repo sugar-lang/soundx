@@ -79,7 +79,7 @@ strategies
 		// try to derive first goal
 		?(asms, inf-rules, goals@[judg|_]);
 		<sx-debug(|"Trying to derive: ")> (<sx-pretty-print-term> judg);
-		(<sx-dfsbc-build-derivations-by-asm(|vars-asms)> (asms, asms, inf-rules, goals) <+
+		sx-report-success(<sx-dfsbc-build-derivations-by-asm(|vars-asms)> (asms, asms, inf-rules, goals) <+
 		 (<sx-is-prim-judgement> judg;
 		  <sx-dfsbc-build-derivations-by-prim(|vars-asms)> (asms, inf-rules, goals)) +
 		  <sx-dfsbc-build-derivations-by-rule(|vars-asms)> (asms, inf-rules, inf-rules, goals))

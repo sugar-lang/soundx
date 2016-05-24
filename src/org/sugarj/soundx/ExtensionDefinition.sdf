@@ -68,3 +68,4 @@ exports
 		  SXInferenceRuleDesugaring+ -> ToplevelDeclaration {cons("SXInductiveDefinitionsDesugarings")}
 
 		SXINFRULENAME ":" SXGuardedDesugaring -> SXInferenceRuleDesugaring {cons("SXInferenceRuleDesugaring")}
+		SXINFRULENAME ":" "{" SXGuardedDesugaring "}" -> SXInferenceRuleDesugaring {cons("SXInferenceRuleDesugaring")}

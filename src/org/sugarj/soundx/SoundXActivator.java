@@ -34,10 +34,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.sugarj.AbstractBaseLanguage;
 import org.sugarj.BaseLanguageRegistry;
 import org.sugarj.common.path.AbsolutePath;
 import org.sugarj.common.path.Path;
@@ -51,11 +56,37 @@ import org.sugarj.common.path.Path;
 public class SoundXActivator extends AbstractUIPlugin {
 	private static SoundXActivator plugin;
 
-	public SoundXActivator(String bldFilename) {
-		Path pluginDirectory = getPluginDirectory();
-		SoundXBaseLanguage instance = new SoundXBaseLanguage();
-		instance.processBaseLanguageDefinition(bldFilename, pluginDirectory);
-		BaseLanguageRegistry.getInstance().registerBaseLanguage(instance);
+	public SoundXActivator(final String bldFilename) {
+		BaseLanguageRegistry.getInstance().registerBaseLanguageLazy(new Future<AbstractBaseLanguage>() {
+
+			@Override
+			public boolean cancel(boolean mayInterruptIfRunning) {
+				return false;
+			}
+
+			@Override
+			public boolean isCancelled() {
+				return false;
+			}
+
+			@Override
+			public boolean isDone() {
+				return false;
+			}
+
+			@Override
+			public AbstractBaseLanguage get() throws InterruptedException, ExecutionException {
+				Path pluginDirectory = getPluginDirectory();
+				SoundXBaseLanguage instance = new SoundXBaseLanguage();
+				instance.processBaseLanguageDefinition(bldFilename, pluginDirectory);
+				return instance;
+			}
+
+			@Override
+			public AbstractBaseLanguage get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+				return get();
+			}
+		});
 	}
 
 	public void start(BundleContext context) throws Exception {
@@ -95,12 +126,15 @@ public class SoundXActivator extends AbstractUIPlugin {
 		String binPath = classPath.substring(0, classPath.length()
 				- thisClassPath.length());
 
-		String binSuffix = binPath.substring(binPath.length()-4, binPath.length());
-		if(! binSuffix.equals("bin/"))
-			throw new RuntimeException("binPath does not end with bin/");
-
-		String pluginPath = binPath.substring(0, binPath.length()-4);
-
-		return new AbsolutePath(pluginPath);
+		if(binPath.endsWith("/bin/")) {
+			String pluginPath = binPath.substring(0, binPath.length()-"bin/".length());
+			return new AbsolutePath(pluginPath);
+		}
+		else if(binPath.endsWith("/target/classes/")) {
+			String pluginPath = binPath.substring(0, binPath.length()-"target/classes/".length());
+			return new AbsolutePath(pluginPath);
+		}
+		
+		throw new RuntimeException("Expected bin path ending with bin/ or target/classes/ but was " + binPath);
 	}
 }

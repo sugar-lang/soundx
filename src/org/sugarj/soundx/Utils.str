@@ -47,6 +47,8 @@ strategies
 	 *
 	 */
 	sx-print-error = debug(!"")
+	
+	sx-report-success(s) = s < where(<debug> " success") + where(<debug> " failed") 
 
 	/**
  	 * Checks if the current toplevel declaration is the last one.
