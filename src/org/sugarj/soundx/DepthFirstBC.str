@@ -222,9 +222,12 @@ strategies
 		// try next rule
 		?(asms, all-inf-rules, [inf-rule|inf-rules], goals@[judg|judgs]);
 		((<sx-fresh-inf-rule> inf-rule => SXInfRule(premises, name, concl);
+		  // <sx-debug(|"fresh rule: ")> SXInfRule(premises, name, concl);
 		  <sx-dfsbc-unify(|vars-asms)> (judg, concl) => mgu;
+		  // <sx-debug(|"mgu: ")> mgu;
 		  <sx-sub-apply> (mgu, <conc> (premises, judgs)) => judgs1;
-		  <sx-dfsbc-build-derivations(|vars-asms)> (asms, all-inf-rules, judgs1) => (sub, derivs);
+		  // <sx-debug(|"new goals: ")> judgs1;
+      <sx-dfsbc-build-derivations(|vars-asms)> (asms, all-inf-rules, judgs1) => (sub, derivs);
 		  <split-at(|<length> premises)> derivs => (derivs-prem, derivs-other);
 		  <sx-sub-compose> (sub, mgu) => sub1;
 		  <sx-sub-apply> (sub1, judg) => judg1;

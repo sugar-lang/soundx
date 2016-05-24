@@ -126,11 +126,16 @@ strategies
 	sx-pretty-print-term =
 		?expr;
 		sx-get-pp-table => tbl;
-		<bottomup(try(\SXMetaVarGen(name, _) -> SXMetaVar(name)\))> expr => expr1;
+		<bottomup(try(sx-metavarGen-to-metavar))> expr => expr1;
 		<bottomup(try(\SXMetaVar(name) -> name\))> expr1 => expr2;
 		(// <sx-pretty-print(|tbl)> expr1 <+
 		 <sx-base-lang-pretty-print> expr2 <+
 		 <write-to-string> expr1)
+
+  sx-metavarGen-to-metavar : SXMetaVarGen(name, gen) -> SXMetaVar(nameid)
+  where
+    ids := <int-to-string> gen;
+    nameid := <conc-strings> (name, "_", ids)
 
 	/**
 	 * Converts a list of Grammars to a pretty printer table.
