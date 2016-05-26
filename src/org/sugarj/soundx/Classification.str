@@ -83,7 +83,7 @@ strategies
 				!SXRuleB()
 			else
 				// make error message
-				<sx-env-get-named-inf-rule> name => Some(input@SXNamedInferenceRule(orig-name, _));
+				<sx-env-get-named-inf-rule> name => Some(input@SXNamedInferenceRule(orig-name, _, _));
 				<sx-basic-desugar-inf-rule(|current-ext)> inf-rule => des-rule@SXInfRule(des-premises, _, des-concl);
 				<sx-pretty-print-term> des-concl => des-concl-str;
 				<sx-pretty-print-list-comma> premises => premises-str;

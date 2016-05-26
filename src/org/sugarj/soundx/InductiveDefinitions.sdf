@@ -46,6 +46,7 @@ exports
   	
   	"inductive"   -> SXIndDefKeyword
   	"definitions" -> SXIndDefKeyword
+  	"assume"   -> SXIndDefKeyword
 
   lexical restrictions
   	SXRULESEP -/- [\-]
@@ -54,8 +55,11 @@ exports
   	"inductive" "definitions" SXNamedInferenceRule+ ->
   	  SXInductiveDefinitions {cons("SXInductiveDefinitions")}
   	
-  	SXINFRULENAME ":" SXInferenceRule ->
+  	SXINFRULENAME ":" SXInferenceRule SXAssumptions ->
   	  SXNamedInferenceRule {cons("SXNamedInferenceRule")}
+
+    SXINFRULENAME ":" "{" SXInferenceRule SXAssumptions "}" ->
+      SXNamedInferenceRule {cons("SXNamedInferenceRule")}
 
     SXInfRulePremises SXRULESEP SXJudgement ->
       SXInferenceRule {cons("SXInferenceRule"),
@@ -74,3 +78,6 @@ exports
 
     "concat" "(" SXAtom "," SXAtom ")" "=" SXAtom -> SXJudgement {cons("SXConcat")}
     "suffix" "(" SXAtom ")" "=" SXAtom            -> SXJudgement {cons("SXSuffix")}
+
+    SXAssumption* -> SXAssumptions {cons("SXAssumptions")}
+    "assume" SXNamedInferenceRule -> SXAssumption {cons("SXAssumption")}

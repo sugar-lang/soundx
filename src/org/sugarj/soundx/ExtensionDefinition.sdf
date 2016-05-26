@@ -61,7 +61,6 @@ exports
 		"{" SXUniversalDesugaring "}" -> SXDesugaring {bracket}
 
 		SXWhereClause* -> SXWhereClauses {cons("SXWhereClauses")}
-
 		"where" SXWhereEquation -> SXWhereClause {cons("SXWhereClause")}
 
 		"inductive" "definitions" "and" "desugarings"
