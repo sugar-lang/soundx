@@ -45,3 +45,6 @@ signature constructors
 	SXInfRulePremise:       SXInfRulePremise                            -> SXInfRulePremisesEnum
 	SXInfRulePremisesNil:                                                  SXInfRulePremises
 	SXInfRulePremisesCons:  SXInfRulePremisesEnum * SXInfRulePremises   -> SXInfRulePremises
+  SXAssumptions: List(SXAssumption) -> SXAssumptions
+  SXAssumption: SXINFRULENAME * List(SXASSUMPTIONVAR) * SXInferenceRule -> SXAssumption
+  

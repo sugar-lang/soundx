@@ -47,6 +47,8 @@ exports
   	"inductive"   -> SXIndDefKeyword
   	"definitions" -> SXIndDefKeyword
   	"assume"   -> SXIndDefKeyword
+  	
+  	~[\,\ \t\r\n]+ -> SXASSUMPTIONVAR
 
   lexical restrictions
   	SXRULESEP -/- [\-]
@@ -80,4 +82,5 @@ exports
     "suffix" "(" SXAtom ")" "=" SXAtom            -> SXJudgement {cons("SXSuffix")}
 
     SXAssumption* -> SXAssumptions {cons("SXAssumptions")}
-    "assume" SXNamedInferenceRule -> SXAssumption {cons("SXAssumption")}
+    "assume" SXINFRULENAME "(" {SXASSUMPTIONVAR ","}* ")" ":" SXInferenceRule -> SXAssumption {cons("SXAssumption")}
+    

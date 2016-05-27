@@ -368,9 +368,9 @@ strategies
      * @type (String, SXInfRule) -> SXEnv
      */  
     sx-env-add-inference-rule =
-  	    ?(name, rule);
+  	    ?(name, rule, assumptions);
   	    <sx-env-get> "inference-rules";
-  	    hashtable-put(|name, rule)
+  	    hashtable-put(|name, (rule, assumptions))
 
 	/**
 	 * Returns all inference rules.

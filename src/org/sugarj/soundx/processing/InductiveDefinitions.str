@@ -70,7 +70,9 @@ strategies
 		<sx-env-add-named-inf-rule> (prefixed-name, named-rule);
 		<sx-process-named-infrule-to-abs(|prefixed-name);
 		 sx-meta-var-to-sx-metavar> rule => analyzed-rule;
-		<sx-process-add-inference-rule> (name, analyzed-rule)
+		<sx-process-assumptions-to-abs;
+		 sx-meta-var-to-sx-metavar> assumptions => analyzed-assumptions; 
+		<sx-process-add-inference-rule> (name, analyzed-rule, analyzed-assumptions)
 
     /**
      * Convert named inference rule to abstract syntax.
@@ -82,6 +84,17 @@ strategies
 		<collect-all(sx-is-judgement, conc)> premises => premises-list;
 		!SXInfRule(premises-list, name, concl)
 
+  sx-process-assumptions-to-abs =
+    ?SXAssumptions(as);
+    <map(sx-process-assumption-to-abs)> as
+    
+  sx-process-assumption-to-abs =
+  	?SXAssumption(name, vars, rule);
+  	<sx-prefix-name> name => prefixed-name;
+  	<sx-process-named-infrule-to-abs(|prefixed-name);
+     sx-meta-var-to-sx-metavar> rule => SXInfRule(premises-list, _, concl);
+   !SXAssumptionRule(prefixed-name, vars, premises-list, concl)
+
 	/**
 	 * Adds an inference rule to the environment. Aborts with an error
 	 * if a rule of that name is already defined. In the environment,
@@ -90,10 +103,10 @@ strategies
 	 * @type (String, SXInfRule) -> SXEnv
 	 */
 	sx-process-add-inference-rule =
-		?(name, rule);
+		?(name, rule, assumptions);
 		<sx-env-get-inference-rule> name;
 		if ?None() then
-			<sx-env-add-inference-rule> (name, rule)
+			<sx-env-add-inference-rule> (name, rule, assumptions)
 		else
 			<sx-analysis-fail(|"Duplicate inference rule name")> name
 		end

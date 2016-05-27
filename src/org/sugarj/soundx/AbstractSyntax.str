@@ -114,6 +114,7 @@ strategies
  */
 signature constructors
 	SXInfRule: List(SXJudgement) * String * SXJudgement -> SXAbsInfRule
+	SXAssumptionRule : SXINFRULENAME * List(SXASSUMPTIONVAR) * List(SXJudgement) * SXJudgement -> SXAbsAssumptionRule
 	
 	SXRuleX:         SXClassification
 	SXRuleB:         SXClassification

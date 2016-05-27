@@ -91,4 +91,4 @@ strategies
 		!SXInfRule(premises-list, prefixed-name, judg-name#(concl-args)) => inf-rule;
 		<sx-meta-var-to-sx-metavar> inf-rule => inf-rule1;
 		<sx-env-add-named-inf-rule> (prefixed-name, guarded-des);
-		<sx-process-add-inference-rule> (prefixed-name, inf-rule1)
+		<sx-process-add-inference-rule> (prefixed-name, inf-rule1, []) // TODO assumptions

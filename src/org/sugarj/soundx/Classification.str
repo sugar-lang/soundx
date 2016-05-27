@@ -60,7 +60,8 @@ strategies
 	 */
 	sx-classify-all-inf-rules(|current-ext, base-inf-rules) =
 		?ext-inf-rules;
-		map(sx-classify-inf-rule(|current-ext, ext-inf-rules, base-inf-rules))
+		<map(?(<id>,_))> ext-inf-rules => ext-inf-rules-no-assumptions;
+		map(sx-classify-inf-rule(|current-ext, ext-inf-rules-no-assumptions, base-inf-rules))
 		
 	/**
 	 * Classifies an inference rule. It fails if the inference rule cannot
@@ -73,12 +74,12 @@ strategies
 	 * @type SXInfRule -> SXClassification
 	 */
 	sx-classify-inf-rule(|current-ext, ext-inf-rules, base-inf-rules) =
-		?inf-rule@(premises, name, _);
-		<sx-classify-inf-rule-x(|current-ext, ext-inf-rules, base-inf-rules)> inf-rule => x-res;
+		?(inf-rule@(premises, name, _), assumptions);
+		<sx-classify-inf-rule-x(|current-ext, ext-inf-rules, base-inf-rules)> (inf-rule, assumptions) => x-res;
 		if !x-res; ?SXRuleX() then
 			!SXRuleX()
 		else
-			<sx-classify-inf-rule-b(|current-ext, ext-inf-rules, base-inf-rules)> inf-rule => b-res;
+			<sx-classify-inf-rule-b(|current-ext, ext-inf-rules, base-inf-rules)> (inf-rule, assumptions) => b-res;
 			if !b-res; ?SXRuleB() then
 				!SXRuleB()
 			else
@@ -154,7 +155,7 @@ strategies
 	 * @type SXInfRule -> SXClassification
 	 */
 	sx-classify-inf-rule-x(|current-ext, ext-inf-rules, base-inf-rules) =
-		?rule@SXInfRule(premises, name, concl);
+		?(rule@SXInfRule(premises, name, concl), assumptions);
 		<sx-debug(|"Trying to verify as X: ")> (<sx-pretty-print-term> rule);
 		<sx-basic-desugar-inf-rule(|current-ext)> rule => des-rule@SXInfRule(des-premises, _, des-concl);
 	    <sx-debug(|"Desugared rule: ")> des-rule;
@@ -187,7 +188,7 @@ strategies
 	 * @type SXInfRule -> SXClassification
 	 */
 	sx-classify-inf-rule-b(|current-ext, ext-inf-rules, base-inf-rules) =
-		?rule@SXInfRule(premises, name, concl);
+		?(rule@SXInfRule(premises, name, concl), assumptions);
 		<sx-debug(|"Trying to verify as B: ")> (<sx-pretty-print-term> rule);
 		<sx-basic-desugar-inf-rule(|current-ext)> rule => des-rule@SXInfRule(des-premises, _, des-concl);
 		<sx-debug(|"Desugared rule: ")> des-rule;
