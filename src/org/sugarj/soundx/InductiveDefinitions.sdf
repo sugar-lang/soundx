@@ -48,7 +48,7 @@ exports
   	"definitions" -> SXIndDefKeyword
   	"assume"   -> SXIndDefKeyword
   	
-  	~[\,\ \t\r\n]+ -> SXASSUMPTIONVAR
+  	~[\,\ \t\r\n\(\)\[\]\{\}]+ -> SXASSUMPTIONVAR
 
   lexical restrictions
   	SXRULESEP -/- [\-]

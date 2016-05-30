@@ -61,7 +61,7 @@ strategies
 	sx-classify-all-inf-rules(|current-ext, base-inf-rules) =
 		?ext-inf-rules;
 		<map(?(<id>,_))> ext-inf-rules => ext-inf-rules-no-assumptions;
-		map(sx-classify-inf-rule(|current-ext, ext-inf-rules-no-assumptions, base-inf-rules))
+		<map(sx-classify-inf-rule(|current-ext, ext-inf-rules-no-assumptions, base-inf-rules))> ext-inf-rules
 		
 	/**
 	 * Classifies an inference rule. It fails if the inference rule cannot
